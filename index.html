@@ -712,6 +712,12 @@
 
             const res = await fetch(`https://docs.google.com/spreadsheets/d/${activeConfig.sheetId}/gviz/tq?tqx=out:json`);
             const text = await res.text();
+            
+            // XỬ LÝ LỖI MỞ QUYỀN GOOGLE SHEETS
+            if (text.includes('<!DOCTYPE html>') || text.includes('<html')) {
+                throw new Error("LỖI KHÓA SHEET: Thầy/Cô chưa mở quyền chia sẻ link Google Sheets. Hãy đổi thành 'Bất kỳ ai có liên kết' (Anyone with the link).");
+            }
+            
             const jsonStr = text.substring(47).slice(0, -2);
             const data = JSON.parse(jsonStr);
             
@@ -747,11 +753,20 @@
                  q.options = newOptions;
                  q.correctIndex = newCorrectIndex;
               });
-            } else { throw new Error('Dữ liệu rỗng'); }
-          } else { throw new Error('Mã truy cập từ chối!'); }
+            } else { throw new Error('LỖI DỮ LIỆU: Google Sheets bị trống hoặc không đúng định dạng 7 cột.'); }
+          } else { throw new Error('LỖI MÃ: Mã chiến trận không tồn tại hoặc bạn đang nhập mã tạo ở nơi khác!'); }
         } catch (err) {
           hideLoading();
-          $('loginErrorMsg').textContent = err.message || "Lỗi tải dữ liệu chiến trận.";
+          let errorMsg = err.message || "Lỗi tải dữ liệu chiến trận.";
+          
+          // Xử lý báo lỗi Firebase Rules
+          if (errorMsg.includes('Missing or insufficient permissions')) {
+              errorMsg = "LỖI FIREBASE: Chưa cấp quyền truy cập. Hãy vào Firestore -> Rules và đổi thành 'allow read, write: if true;'";
+          } else if (errorMsg.includes('Unexpected token')) {
+              errorMsg = "LỖI KẾT NỐI: Cấu trúc Sheet không hợp lệ hoặc link Sheet chưa mở công khai.";
+          }
+          
+          $('loginErrorMsg').textContent = errorMsg;
           show($('loginErrorMsg'));
           return;
         }
