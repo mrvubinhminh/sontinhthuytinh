@@ -106,49 +106,65 @@
       </div>
 
       <!-- Tab Học Sinh -->
-      <div id="studentForm" class="space-y-5 animate-fadeIn">
-        <div id="loginErrorMsg" class="hidden bg-red-950 text-red-400 text-sm p-3 rounded-lg border border-red-800 font-medium"></div>
+      <div id="studentForm" class="space-y-4 animate-fadeIn">
+        <div id="loginErrorMsg" class="hidden bg-red-950 text-red-400 text-sm p-3 rounded-lg border border-red-800 font-medium text-center leading-relaxed"></div>
         
-        <!-- Bảng Cốt Truyện -->
-        <div class="bg-slate-950/80 border border-blue-500/40 rounded-xl p-4 shadow-[0_0_20px_rgba(59,130,246,0.15)] relative overflow-hidden">
+        <!-- Bảng Cốt Truyện (Menu Mở Rộng) -->
+        <div class="bg-slate-950/80 border border-blue-500/40 rounded-xl shadow-[0_0_20px_rgba(59,130,246,0.15)] relative overflow-hidden">
           <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-50"></div>
-          <h3 class="text-blue-400 font-black text-sm uppercase tracking-widest flex items-center justify-center mb-2 drop-shadow-md">
-            <i data-lucide="book-open" class="w-4 h-4 mr-2 text-amber-500"></i> Truyền Thuyết
-          </h3>
-          <p class="text-xs md:text-sm font-medium text-slate-300 text-justify leading-relaxed">
-            Thủy Tinh đem sính lễ đến muộn, nổi giận đùng đùng hô mưa gọi gió, dâng nước lũ cuồn cuộn hòng cướp Mị Nương. Hóa thân thành thần núi <span class="text-amber-500 font-black drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]">Sơn Tinh</span>, bạn hãy dùng trí tuệ giải mã các thử thách để dâng núi lên cao, chặn đứng dòng nước và bảo vệ muôn dân!
-          </p>
+          <button type="button" onclick="toggleAccordion('storyContent', 'storyIcon')" class="w-full p-4 flex items-center justify-between focus:outline-none bg-slate-900/40 hover:bg-slate-900/80 transition-colors">
+            <h3 class="text-blue-400 font-black text-sm uppercase tracking-widest flex items-center drop-shadow-md">
+              <i data-lucide="book-open" class="w-4 h-4 mr-2 text-amber-500"></i> Truyền Thuyết
+            </h3>
+            <div class="flex items-center space-x-2 text-blue-400/60">
+                <span class="text-[10px] uppercase font-bold tracking-wider">Mở rộng</span>
+                <i data-lucide="chevron-down" id="storyIcon" class="w-4 h-4 transition-transform duration-300"></i>
+            </div>
+          </button>
+          <div id="storyContent" class="px-4 pb-4 hidden animate-fadeIn border-t border-slate-800/50">
+            <p class="text-xs md:text-sm font-medium text-slate-300 text-justify leading-relaxed mt-3">
+              Thủy Tinh đem sính lễ đến muộn, nổi giận đùng đùng hô mưa gọi gió, dâng nước lũ cuồn cuộn hòng cướp Mị Nương. Hóa thân thành thần núi <span class="text-amber-500 font-black drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]">Sơn Tinh</span>, bạn hãy dùng trí tuệ giải mã các thử thách để dâng núi lên cao, chặn đứng dòng nước và bảo vệ muôn dân!
+            </p>
+          </div>
         </div>
 
-        <!-- Bảng Luật -->
-        <div class="bg-slate-950/80 border border-emerald-500/40 rounded-xl p-4 shadow-[0_0_20px_rgba(16,185,129,0.15)] relative overflow-hidden">
+        <!-- Bảng Luật (Menu Mở Rộng) -->
+        <div class="bg-slate-950/80 border border-emerald-500/40 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.15)] relative overflow-hidden">
           <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-50"></div>
-          <h3 class="text-emerald-400 font-black text-sm uppercase tracking-widest flex items-center justify-center mb-3 drop-shadow-md">
-            <i data-lucide="scroll" class="w-4 h-4 mr-2 text-amber-500"></i> Quy Tắc Trị Thủy
-          </h3>
-          <ul class="space-y-3 text-xs md:text-sm font-bold text-slate-300">
-            <li class="flex items-start">
-              <div class="bg-slate-900 p-1 rounded border border-slate-700 mr-2 mt-0.5 shrink-0">
-                <i data-lucide="zap" class="w-3.5 h-3.5 text-emerald-400 fill-emerald-400"></i>
-              </div>
-              <span class="leading-relaxed">Trả lời đúng liên tiếp sẽ kích hoạt <span class="text-emerald-400 font-black uppercase drop-shadow-[0_0_5px_rgba(16,185,129,0.8)]">PHÉP DÂNG NÚI</span>.</span>
-            </li>
-            <li class="flex items-start">
-              <div class="bg-slate-900 p-1 rounded border border-slate-700 mr-2 mt-0.5 shrink-0">
-                <i data-lucide="mountain" class="w-3.5 h-3.5 text-amber-500"></i>
-              </div>
-              <span class="leading-relaxed">Chiều cao núi thu được = Linh khí gốc <span class="text-amber-500 font-black">X</span> Hệ số Phép thuật. Núi dâng càng nhanh, Thủy Tinh càng khiếp sợ!</span>
-            </li>
-            <li class="flex items-start">
-              <div class="bg-slate-900 p-1 rounded border border-slate-700 mr-2 mt-0.5 shrink-0">
-                <i data-lucide="waves" class="w-3.5 h-3.5 text-blue-400"></i>
-              </div>
-              <span class="leading-relaxed">Cẩn thận! Chỉ 1 câu sai, nước lũ sẽ làm <span class="text-blue-400 font-black uppercase">SẠT LỞ</span> và hệ số phép thuật trở về 0.</span>
-            </li>
-          </ul>
+          <button type="button" onclick="toggleAccordion('rulesContent', 'rulesIcon')" class="w-full p-4 flex items-center justify-between focus:outline-none bg-slate-900/40 hover:bg-slate-900/80 transition-colors">
+            <h3 class="text-emerald-400 font-black text-sm uppercase tracking-widest flex items-center drop-shadow-md">
+              <i data-lucide="scroll" class="w-4 h-4 mr-2 text-amber-500"></i> Quy Tắc Trị Thủy
+            </h3>
+            <div class="flex items-center space-x-2 text-emerald-400/60">
+                <span class="text-[10px] uppercase font-bold tracking-wider">Mở rộng</span>
+                <i data-lucide="chevron-down" id="rulesIcon" class="w-4 h-4 transition-transform duration-300"></i>
+            </div>
+          </button>
+          <div id="rulesContent" class="px-4 pb-4 hidden animate-fadeIn border-t border-slate-800/50">
+            <ul class="space-y-3 text-xs md:text-sm font-bold text-slate-300 mt-3">
+              <li class="flex items-start">
+                <div class="bg-slate-900 p-1 rounded border border-slate-700 mr-2 mt-0.5 shrink-0">
+                  <i data-lucide="zap" class="w-3.5 h-3.5 text-emerald-400 fill-emerald-400"></i>
+                </div>
+                <span class="leading-relaxed">Trả lời đúng liên tiếp sẽ kích hoạt <span class="text-emerald-400 font-black uppercase drop-shadow-[0_0_5px_rgba(16,185,129,0.8)]">PHÉP DÂNG NÚI</span>.</span>
+              </li>
+              <li class="flex items-start">
+                <div class="bg-slate-900 p-1 rounded border border-slate-700 mr-2 mt-0.5 shrink-0">
+                  <i data-lucide="mountain" class="w-3.5 h-3.5 text-amber-500"></i>
+                </div>
+                <span class="leading-relaxed">Chiều cao núi = Linh khí gốc <span class="text-amber-500 font-black">X</span> Hệ số Phép thuật.</span>
+              </li>
+              <li class="flex items-start">
+                <div class="bg-slate-900 p-1 rounded border border-slate-700 mr-2 mt-0.5 shrink-0">
+                  <i data-lucide="waves" class="w-3.5 h-3.5 text-blue-400"></i>
+                </div>
+                <span class="leading-relaxed">Chỉ 1 câu sai, nước lũ sẽ làm <span class="text-blue-400 font-black uppercase">SẠT LỞ</span> và hệ số về 0.</span>
+              </li>
+            </ul>
+          </div>
         </div>
 
-        <div>
+        <div class="pt-2">
           <label class="block text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">Tên Vị Tướng (Bí danh)</label>
           <div class="relative">
             <i data-lucide="user" class="absolute left-3 top-3.5 w-5 h-5 text-slate-500"></i>
@@ -162,7 +178,7 @@
             <input type="text" id="examCodeInput" placeholder="Để trống nếu chơi bản Demo" class="w-full pl-10 pr-4 py-3 bg-slate-950 text-white rounded-xl border border-slate-700 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all uppercase font-mono tracking-widest" />
           </div>
         </div>
-        <button id="startExamBtn" class="w-full flex items-center justify-center space-x-2 bg-amber-600 hover:bg-amber-500 text-white py-4 rounded-xl font-black uppercase tracking-widest shadow-[0_0_20px_rgba(217,119,6,0.4)] transition active:scale-95">
+        <button id="startExamBtn" class="w-full flex items-center justify-center space-x-2 bg-amber-600 hover:bg-amber-500 text-white py-4 rounded-xl font-black uppercase tracking-widest shadow-[0_0_20px_rgba(217,119,6,0.4)] transition active:scale-95 mt-2">
           <i data-lucide="mountain" class="w-6 h-6"></i>
           <span>Dâng Núi Chống Lũ</span>
         </button>
@@ -506,6 +522,8 @@
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
     const db = getFirestore(app);
+    
+    // Sửa lỗi đường dẫn Vercel / Canvas không khớp khi nhập mã
     const appId = typeof __app_id !== 'undefined' ? __app_id : 'exam-app-demo';
 
     let examTimeMinutes = 20; 
@@ -587,6 +605,19 @@
       if(viewName === 'teacher') fetchLeaderboard();
     }
 
+    // --- JS CHO MENU MỞ RỘNG (ACCORDION) ---
+    window.toggleAccordion = (contentId, iconId) => {
+      const content = $(contentId);
+      const icon = $(iconId);
+      if(content.classList.contains('hidden')) {
+        content.classList.remove('hidden');
+        icon.classList.add('rotate-180');
+      } else {
+        content.classList.add('hidden');
+        icon.classList.remove('rotate-180');
+      }
+    };
+
     window.goHome = () => {
       if(timerInterval) clearInterval(timerInterval);
       $('studentNameInput').value = '';
@@ -655,12 +686,15 @@
     // 4. FIREBASE AUTH
     async function initAuth() {
       try {
-        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+        if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token && typeof __firebase_config !== 'undefined') {
           await signInWithCustomToken(auth, __initial_auth_token);
         } else {
           await signInAnonymously(auth);
         }
-      } catch (error) { console.error("Lỗi xác thực:", error); }
+      } catch (error) { 
+        console.error("Lỗi xác thực:", error); 
+        try { await signInAnonymously(auth); } catch(e) {}
+      }
     }
     initAuth();
     onAuthStateChanged(auth, user => { currentUser = user; });
@@ -718,8 +752,13 @@
                 throw new Error("LỖI KHÓA SHEET: Thầy/Cô chưa mở quyền chia sẻ link Google Sheets. Hãy đổi thành 'Bất kỳ ai có liên kết' (Anyone with the link).");
             }
             
-            const jsonStr = text.substring(47).slice(0, -2);
-            const data = JSON.parse(jsonStr);
+            let data;
+            try {
+                const jsonStr = text.substring(47).slice(0, -2);
+                data = JSON.parse(jsonStr);
+            } catch (e) {
+                throw new Error("LỖI ĐỊNH DẠNG: Link Sheet không đúng hoặc cấu trúc bị lỗi.");
+            }
             
             const rows = data.table.rows;
             let parsed = rows.map(r => {
@@ -754,23 +793,25 @@
                  q.correctIndex = newCorrectIndex;
               });
             } else { throw new Error('LỖI DỮ LIỆU: Google Sheets bị trống hoặc không đúng định dạng 7 cột.'); }
-          } else { throw new Error('LỖI MÃ: Mã chiến trận không tồn tại hoặc bạn đang nhập mã tạo ở nơi khác!'); }
+          } else { 
+            throw new Error(`LỖI MÃ: Mã chiến trận "${examCodeStr}" không tồn tại!\n(Lưu ý: Mã tạo ở Vercel sẽ không dùng được trên trang Preview này và ngược lại do khác Database).`); 
+          }
         } catch (err) {
+          console.error("DEBUG ERROR:", err);
           hideLoading();
-          let errorMsg = err.message || "Lỗi tải dữ liệu chiến trận.";
           
-          // Xử lý báo lỗi Firebase Rules
+          let errorMsg = err.message || "Lỗi tải dữ liệu chiến trận.";
           if (errorMsg.includes('Missing or insufficient permissions')) {
-              errorMsg = "LỖI FIREBASE: Chưa cấp quyền truy cập. Hãy vào Firestore -> Rules và đổi thành 'allow read, write: if true;'";
-          } else if (errorMsg.includes('Unexpected token')) {
-              errorMsg = "LỖI KẾT NỐI: Cấu trúc Sheet không hợp lệ hoặc link Sheet chưa mở công khai.";
+              errorMsg = "LỖI FIREBASE: Chưa cấp quyền Firestore Database. Hãy vào Rules đổi thành 'allow read, write: if true;'";
           }
           
-          $('loginErrorMsg').textContent = errorMsg;
+          $('loginErrorMsg').innerText = errorMsg.replace('\n', '<br/>');
           show($('loginErrorMsg'));
+          alert(errorMsg); // Cảnh báo thẳng ra màn hình
           return;
         }
       } else {
+        // DEMO MODE
         examTimeMinutes = 20; 
         let shuffledDemo = shuffleArray([...defaultQuizData]);
         shuffledDemo.forEach(q => {
