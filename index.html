@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sơn Tinh Chống Lũ - Lớp Toán Thầy Lực NHC</title>
+  <title>Xây Tháp Tri Thức - Lớp Toán Thầy Lực NHC</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -26,74 +26,82 @@
     /* Custom Scrollbar cho Darkmode */
     ::-webkit-scrollbar { width: 8px; height: 8px; }
     ::-webkit-scrollbar-track { background: #0f172a; }
-    ::-webkit-scrollbar-thumb { background: #10b981; border-radius: 4px; }
-    ::-webkit-scrollbar-thumb:hover { background: #34d399; }
+    ::-webkit-scrollbar-thumb { background: #0ea5e9; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #38bdf8; }
     
     .animate-fadeIn { animation: fadeIn 0.4s ease-in-out; }
     @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-    /* Hiệu ứng rung lắc khi bị Thủy Tinh tấn công */
+    /* Hiệu ứng rung lắc khi đứt chuỗi */
     @keyframes shake {
       0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-10px); border-color: #3b82f6; }
-      40%, 80% { transform: translateX(10px); border-color: #3b82f6; }
+      20%, 60% { transform: translateX(-10px); border-color: #64748b; }
+      40%, 80% { transform: translateX(10px); border-color: #64748b; }
     }
-    .animate-shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; border-color: #3b82f6 !important; box-shadow: 0 0 30px rgba(59,130,246,0.5); }
-    
-    /* Hiệu ứng bay chữ mất sinh mệnh (Nước cuốn) */
-    @keyframes pingDamage {
-      0% { transform: translate(-50%, -50%) scale(0.5); opacity: 1; }
-      100% { transform: translate(-50%, -150%) scale(1.5); opacity: 0; }
-    }
-    .animate-damage { animation: pingDamage 1s forwards; }
-    
-    /* Hiệu ứng tim đập */
-    @keyframes heartbeat {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.2); }
-    }
-    .animate-heartbeat { animation: heartbeat 1s infinite; }
+    .animate-shake { animation: shake 0.5s cubic-bezier(.36,.07,.19,.97) both; border-color: #64748b !important; box-shadow: 0 0 30px rgba(100,116,139,0.5); }
 
-    /* Lưới nền Cơn mưa/Nước lũ */
-    .bg-grid { background-image: linear-gradient(to bottom, rgba(56, 189, 248, 0.05) 1px, transparent 1px), linear-gradient(to right, rgba(56, 189, 248, 0.05) 1px, transparent 1px); background-size: 30px 60px; }
+    /* Hiệu ứng Combo Popup */
+    @keyframes comboPop {
+      0% { transform: translate(-50%, -30%) scale(0.5) rotate(-10deg); opacity: 0; }
+      20% { transform: translate(-50%, -50%) scale(1.4) rotate(5deg); opacity: 1; }
+      80% { transform: translate(-50%, -50%) scale(1.2) rotate(0deg); opacity: 1; text-shadow: 0 0 40px #f59e0b, 0 0 80px #f59e0b; }
+      100% { transform: translate(-50%, -70%) scale(1) rotate(0deg); opacity: 0; }
+    }
+    .animate-combo-pop { animation: comboPop 1.2s cubic-bezier(.175,.885,.32,1.275) forwards; }
     
-    .bg-gradient-radial { background: radial-gradient(circle at top center, #064e3b, #020617); }
+    /* Hiệu ứng Combo Break */
+    @keyframes comboBreak {
+      0% { transform: translate(-50%, -50%) scale(1); opacity: 1; filter: grayscale(0); }
+      20% { transform: translate(-50%, -40%) scale(1.1); filter: grayscale(1); }
+      100% { transform: translate(-50%, 100%) scale(0.5); opacity: 0; filter: grayscale(1); }
+    }
+    .animate-combo-break { animation: comboBreak 0.8s ease-in forwards; }
+
+    /* Lưới nền Tri thức (Hướng lên trên) */
+    .bg-grid { background-image: linear-gradient(to top, rgba(14, 165, 233, 0.05) 1px, transparent 1px), linear-gradient(to right, rgba(14, 165, 233, 0.05) 1px, transparent 1px); background-size: 40px 40px; background-position: bottom center; }
+    
+    .bg-gradient-radial { background: radial-gradient(circle at top center, #0c4a6e, #020617); }
   </style>
 </head>
-<body class="bg-slate-950 font-sans text-slate-200 antialiased selection:bg-emerald-500/30 bg-gradient-radial bg-grid min-h-screen bg-fixed">
+<body class="bg-slate-950 font-sans text-slate-200 antialiased selection:bg-cyan-500/30 bg-gradient-radial bg-grid min-h-screen bg-fixed">
 
   <audio id="bgMusic" src="https://cdn.pixabay.com/download/audio/2022/01/18/audio_d0a13f69d2.mp3?filename=epic-battle-114882.mp3" loop></audio>
 
   <div id="loadingOverlay" class="fixed inset-0 bg-slate-950/90 backdrop-blur-md z-[100] hidden flex-col items-center justify-center">
-    <div class="bg-slate-900 border border-emerald-700 p-8 rounded-2xl flex flex-col items-center shadow-[0_0_50px_rgba(16,185,129,0.3)] text-center">
-      <i data-lucide="mountain" class="w-12 h-12 text-amber-500 animate-bounce mb-4 mx-auto"></i>
-      <p id="loadingText" class="text-lg font-black text-amber-500 tracking-widest uppercase">Đang điều động linh khí...</p>
+    <div class="bg-slate-900 border border-cyan-700 p-8 rounded-2xl flex flex-col items-center shadow-[0_0_50px_rgba(6,182,212,0.3)] text-center">
+      <i data-lucide="blocks" class="w-12 h-12 text-cyan-400 animate-bounce mb-4 mx-auto"></i>
+      <p id="loadingText" class="text-lg font-black text-cyan-400 tracking-widest uppercase">Đang xây dựng nền móng...</p>
     </div>
   </div>
 
-  <div id="penaltyContainer" class="fixed inset-0 pointer-events-none z-50 overflow-hidden hidden">
-    <div class="absolute inset-0 bg-blue-600/30"></div>
-    <div id="penaltyText" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center flex-col text-blue-400 text-6xl font-black drop-shadow-[0_0_20px_rgba(59,130,246,0.8)]">
-      <i data-lucide="waves" class="w-20 h-20 text-blue-500 mb-2"></i>
-      <div class="flex items-center space-x-2">
-        <span>-1</span> <i data-lucide="shield" class="w-12 h-12 fill-amber-500 text-amber-500"></i>
-      </div>
+  <!-- Popup Hiệu Ứng Combo -->
+  <div id="comboPopupContainer" class="fixed inset-0 pointer-events-none z-50 overflow-hidden hidden">
+    <div id="comboPopupText" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-orange-500 to-red-500 text-6xl md:text-8xl font-black drop-shadow-[0_10px_20px_rgba(245,158,11,0.5)] italic tracking-tighter whitespace-nowrap">
+      COMBO x2!
+    </div>
+  </div>
+  
+  <!-- Popup Đứt Combo -->
+  <div id="comboBreakContainer" class="fixed inset-0 pointer-events-none z-50 overflow-hidden hidden">
+    <div id="comboBreakText" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 flex items-center flex-col text-slate-500 text-4xl font-black drop-shadow-md uppercase tracking-widest">
+      <i data-lucide="heart-crack" class="w-16 h-16 mb-2"></i>
+      Đứt Chuỗi!
     </div>
   </div>
 
   <div id="login-view" class="flex flex-col items-center justify-center min-h-screen p-4 relative overflow-hidden">
-    <div class="bg-slate-900/80 backdrop-blur-xl p-8 rounded-3xl shadow-[0_0_40px_rgba(0,0,0,0.8)] border border-emerald-900/50 w-full max-w-md transform transition-all z-10 relative">
+    <div class="bg-slate-900/80 backdrop-blur-xl p-8 rounded-3xl shadow-[0_0_40px_rgba(0,0,0,0.8)] border border-cyan-900/50 w-full max-w-md transform transition-all z-10 relative">
       <div class="text-center mb-8 relative">
-        <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-amber-500 shadow-[0_0_30px_rgba(245,158,11,0.4)] bg-slate-900 relative overflow-hidden">
-          <i data-lucide="mountain" class="w-12 h-12 text-amber-500"></i>
+        <div class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 border-2 border-cyan-400 shadow-[0_0_30px_rgba(34,211,238,0.4)] bg-slate-900 relative overflow-hidden">
+          <i data-lucide="mountain-snow" class="w-12 h-12 text-cyan-400"></i>
         </div>
-        <h1 class="text-3xl font-black text-white tracking-widest uppercase drop-shadow-md">Sơn Tinh Chống Lũ</h1>
-        <p class="text-emerald-400 font-bold text-sm mt-2 tracking-widest uppercase">Chiến Dịch: Lớp Toán Thầy Lực</p>
+        <h1 class="text-3xl font-black text-white tracking-widest uppercase drop-shadow-md">Xây Tháp Tri Thức</h1>
+        <p class="text-cyan-400 font-bold text-sm mt-2 tracking-widest uppercase">Chinh Phục Đỉnh Cao</p>
       </div>
 
       <div class="flex bg-slate-950 rounded-xl p-1 mb-6 border border-slate-800">
-        <button id="tabStudentBtn" class="flex-1 py-2 rounded-lg text-sm font-black transition-all bg-slate-800 text-amber-500 shadow-sm uppercase tracking-wider">Tướng Lĩnh</button>
-        <button id="tabTeacherBtn" class="flex-1 py-2 rounded-lg text-sm font-black transition-all text-slate-500 hover:text-slate-300 uppercase tracking-wider">Lạc Hầu</button>
+        <button id="tabStudentBtn" class="flex-1 py-2 rounded-lg text-sm font-black transition-all bg-slate-800 text-cyan-400 shadow-sm uppercase tracking-wider">Kỹ Sư</button>
+        <button id="tabTeacherBtn" class="flex-1 py-2 rounded-lg text-sm font-black transition-all text-slate-500 hover:text-slate-300 uppercase tracking-wider">Kiến Trúc Sư</button>
       </div>
 
       <div id="studentForm" class="space-y-4 animate-fadeIn">
@@ -103,7 +111,7 @@
           <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-blue-400 to-transparent opacity-50"></div>
           <button type="button" onclick="toggleAccordion('storyContent', 'storyIcon')" class="w-full p-4 flex items-center justify-between focus:outline-none bg-slate-900/40 hover:bg-slate-900/80 transition-colors">
             <h3 class="text-blue-400 font-black text-sm uppercase tracking-widest flex items-center drop-shadow-md">
-              <i data-lucide="book-open" class="w-4 h-4 mr-2 text-amber-500"></i> Truyền Thuyết
+              <i data-lucide="book-open" class="w-4 h-4 mr-2 text-cyan-400"></i> Hành Trình
             </h3>
             <div class="flex items-center space-x-2 text-blue-400/60">
                 <span class="text-[10px] uppercase font-bold tracking-wider">Mở rộng</span>
@@ -112,18 +120,18 @@
           </button>
           <div id="storyContent" class="px-4 pb-4 hidden animate-fadeIn border-t border-slate-800/50">
             <p class="text-xs md:text-sm font-medium text-slate-300 text-justify leading-relaxed mt-3">
-              Thủy Tinh nổi giận hô mưa gọi gió, dâng nước lũ cuồn cuộn hòng cướp Mị Nương. Hóa thân thành thần núi <span class="text-amber-500 font-black drop-shadow-[0_0_5px_rgba(245,158,11,0.5)]">Sơn Tinh</span>, bạn phải dùng trí tuệ giải mã thử thách để dâng núi chặn nước, bảo vệ an nguy của muôn dân!
+              Để vươn tới bầu trời, chúng ta cần kiến tạo nên một ngọn tháp vững chắc từ những khối gạch tri thức. Hóa thân thành những <span class="text-cyan-400 font-black drop-shadow-[0_0_5px_rgba(34,211,238,0.5)]">Kỹ Sư</span> tài ba, nhiệm vụ của bạn là giải mã chính xác các tầng tháp để xây dựng kỳ quan vĩ đại nhất!
             </p>
           </div>
         </div>
 
-        <div class="bg-slate-950/80 border border-emerald-500/40 rounded-xl shadow-[0_0_20px_rgba(16,185,129,0.15)] relative overflow-hidden">
-          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-emerald-400 to-transparent opacity-50"></div>
+        <div class="bg-slate-950/80 border border-orange-500/40 rounded-xl shadow-[0_0_20px_rgba(249,115,22,0.15)] relative overflow-hidden">
+          <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-orange-400 to-transparent opacity-50"></div>
           <button type="button" onclick="toggleAccordion('rulesContent', 'rulesIcon')" class="w-full p-4 flex items-center justify-between focus:outline-none bg-slate-900/40 hover:bg-slate-900/80 transition-colors">
-            <h3 class="text-emerald-400 font-black text-sm uppercase tracking-widest flex items-center drop-shadow-md">
-              <i data-lucide="shield-alert" class="w-4 h-4 mr-2 text-amber-500"></i> Luật Sinh Tồn
+            <h3 class="text-orange-400 font-black text-sm uppercase tracking-widest flex items-center drop-shadow-md">
+              <i data-lucide="flame" class="w-4 h-4 mr-2 text-orange-500"></i> Luật Chinh Phục
             </h3>
-            <div class="flex items-center space-x-2 text-emerald-400/60">
+            <div class="flex items-center space-x-2 text-orange-400/60">
                 <span class="text-[10px] uppercase font-bold tracking-wider">Mở rộng</span>
                 <i data-lucide="chevron-down" id="rulesIcon" class="w-4 h-4 transition-transform duration-300"></i>
             </div>
@@ -132,57 +140,57 @@
             <ul class="space-y-3 text-xs md:text-sm font-bold text-slate-300 mt-3">
               <li class="flex items-start">
                 <div class="bg-slate-900 p-1 rounded border border-slate-700 mr-2 mt-0.5 shrink-0">
-                  <i data-lucide="shield" class="w-3.5 h-3.5 text-amber-500 fill-amber-500 animate-pulse"></i>
+                  <i data-lucide="zap" class="w-3.5 h-3.5 text-yellow-400 fill-yellow-400"></i>
                 </div>
-                <span class="leading-relaxed">Trang bị: Bạn có <span class="text-amber-500 font-black uppercase drop-shadow-[0_0_5px_rgba(245,158,11,0.8)]">5 Khối Sơn Thạch</span> bảo vệ. Mỗi lần trả lời sai, Thủy Tinh sẽ phá vỡ 1 khối!</span>
+                <span class="leading-relaxed">Trả lời đúng liên tiếp sẽ kích hoạt chuỗi <span class="text-yellow-400 font-black uppercase drop-shadow-[0_0_5px_rgba(250,204,21,0.8)]">COMBO</span> rực lửa.</span>
               </li>
               <li class="flex items-start">
                 <div class="bg-slate-900 p-1 rounded border border-slate-700 mr-2 mt-0.5 shrink-0">
-                  <i data-lucide="waves" class="w-3.5 h-3.5 text-blue-500"></i>
+                  <i data-lucide="trending-up" class="w-3.5 h-3.5 text-cyan-400"></i>
                 </div>
-                <span class="leading-relaxed">Mất hết 5 khối, nước lũ sẽ tràn vào, bạn sẽ bị <span class="text-blue-400 font-black uppercase tracking-widest">Lũ Cuốn (Tử Trận)</span>.</span>
+                <span class="leading-relaxed">Điểm số thu được = Điểm gốc <span class="text-cyan-400 font-black">X</span> Hệ số COMBO hiện tại. Càng đúng nhiều, điểm càng cao!</span>
               </li>
               <li class="flex items-start">
                 <div class="bg-slate-900 p-1 rounded border border-slate-700 mr-2 mt-0.5 shrink-0">
-                  <i data-lucide="crown" class="w-3.5 h-3.5 text-emerald-400"></i>
+                  <i data-lucide="alert-circle" class="w-3.5 h-3.5 text-red-400"></i>
                 </div>
-                <span class="leading-relaxed">Sống sót qua mọi đợt nước dâng để phong thần <span class="text-emerald-400 font-black uppercase">Trị Thủy</span>.</span>
+                <span class="leading-relaxed">Cẩn thận! Chỉ 1 câu sai sẽ làm <span class="text-red-400 font-black uppercase">ĐỨT CHUỖI</span> và COMBO trở về 0.</span>
               </li>
             </ul>
           </div>
         </div>
 
         <div class="pt-2">
-          <label class="block text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">Tên Vị Tướng (Bí danh)</label>
+          <label class="block text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">Họ Tên / Bí Danh</label>
           <div class="relative">
             <i data-lucide="user" class="absolute left-3 top-3.5 w-5 h-5 text-slate-500"></i>
-            <input type="text" id="studentNameInput" placeholder="Nhập tên thần tướng..." class="w-full pl-10 pr-4 py-3 bg-slate-950 text-white rounded-xl border border-slate-700 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all" />
+            <input type="text" id="studentNameInput" placeholder="Nhập tên Kỹ Sư..." class="w-full pl-10 pr-4 py-3 bg-slate-950 text-white rounded-xl border border-slate-700 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all" />
           </div>
         </div>
         <div>
-          <label class="block text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">Mã Lệnh Trận</label>
+          <label class="block text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">Mã Thiết Kế (Mã Đề)</label>
           <div class="relative">
-            <i data-lucide="swords" class="absolute left-3 top-3.5 w-5 h-5 text-slate-500"></i>
-            <input type="text" id="examCodeInput" placeholder="Để trống nếu chơi bản Demo" class="w-full pl-10 pr-4 py-3 bg-slate-950 text-white rounded-xl border border-slate-700 focus:ring-2 focus:ring-amber-500 focus:border-amber-500 outline-none transition-all uppercase font-mono tracking-widest" />
+            <i data-lucide="qr-code" class="absolute left-3 top-3.5 w-5 h-5 text-slate-500"></i>
+            <input type="text" id="examCodeInput" placeholder="Để trống nếu chơi bản Demo" class="w-full pl-10 pr-4 py-3 bg-slate-950 text-white rounded-xl border border-slate-700 focus:ring-2 focus:ring-cyan-500 focus:border-cyan-500 outline-none transition-all uppercase font-mono tracking-widest" />
           </div>
         </div>
-        <button id="startExamBtn" class="w-full flex items-center justify-center space-x-2 bg-amber-600 hover:bg-amber-500 text-white py-4 rounded-xl font-black uppercase tracking-widest shadow-[0_0_20px_rgba(217,119,6,0.4)] transition active:scale-95 mt-2">
-          <i data-lucide="mountain" class="w-6 h-6"></i>
-          <span>Xuất Quân Chống Lũ</span>
+        <button id="startExamBtn" class="w-full flex items-center justify-center space-x-2 bg-cyan-600 hover:bg-cyan-500 text-white py-4 rounded-xl font-black uppercase tracking-widest shadow-[0_0_20px_rgba(8,145,178,0.4)] transition active:scale-95 mt-2">
+          <i data-lucide="rocket" class="w-6 h-6"></i>
+          <span>Bắt Đầu Xây Tháp</span>
         </button>
       </div>
 
       <div id="teacherForm" class="space-y-5 animate-fadeIn hidden">
         <div>
-          <label class="block text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">Mã bảo mật Lạc Hầu</label>
+          <label class="block text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">Mã bảo mật Kiến Trúc Sư</label>
           <div class="relative">
             <i data-lucide="shield-alert" class="absolute left-3 top-3.5 w-5 h-5 text-slate-500"></i>
-            <input type="password" id="teacherCodeInput" placeholder="Nhập mã bí mật..." class="w-full pl-10 pr-4 py-3 bg-slate-950 text-white rounded-xl border border-slate-700 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all" />
+            <input type="password" id="teacherCodeInput" placeholder="Nhập mã truy cập..." class="w-full pl-10 pr-4 py-3 bg-slate-950 text-white rounded-xl border border-slate-700 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 outline-none transition-all" />
           </div>
         </div>
         <button id="teacherLoginBtn" class="w-full flex items-center justify-center space-x-2 bg-purple-600 hover:bg-purple-500 text-white py-4 rounded-xl font-black uppercase tracking-widest shadow-[0_0_20px_rgba(147,51,234,0.4)] transition active:scale-95">
-          <i data-lucide="scroll" class="w-6 h-6"></i>
-          <span>Truy Cập Phủ Đệ</span>
+          <i data-lucide="compass" class="w-6 h-6"></i>
+          <span>Truy Cập Hệ Thống</span>
         </button>
       </div>
     </div>
@@ -192,17 +200,26 @@
     
     <div class="bg-slate-900/90 backdrop-blur border-b border-slate-800 px-4 md:px-6 py-4 flex justify-between items-center sticky top-0 z-20 shadow-lg">
       <div class="flex flex-col">
-        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Tướng Lĩnh</span>
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-widest">Kỹ Sư</span>
         <div class="font-black text-white flex items-center">
-          <span id="headerStudentName" class="text-amber-500 drop-shadow-md"></span> 
+          <span id="headerStudentName" class="text-cyan-400 drop-shadow-md"></span> 
           <span id="headerExamCode" class="text-slate-500 font-mono text-xs ml-2 border border-slate-700 px-2 rounded hidden md:inline-block"></span>
         </div>
       </div>
       
       <div class="flex items-center space-x-3 md:space-x-6">
         
-        <div id="heartsContainer" class="flex items-center space-x-1.5 bg-slate-950/50 px-3 py-1.5 rounded-lg border border-amber-500/30 shadow-[0_0_10px_rgba(245,158,11,0.1)]">
-          </div>
+        <!-- Khung Điểm Số -->
+        <div class="flex items-center space-x-2 bg-slate-950/50 px-3 py-1.5 rounded-lg border border-yellow-500/30 shadow-[0_0_10px_rgba(234,179,8,0.1)]">
+           <i data-lucide="star" class="w-4 h-4 text-yellow-400 fill-yellow-400"></i>
+           <span class="font-black text-yellow-400 text-base md:text-xl font-mono tracking-wider" id="scoreText">0</span>
+        </div>
+
+        <!-- Khung Combo -->
+        <div id="comboHeaderUI" class="flex items-center space-x-1.5 bg-slate-950/50 px-3 py-1.5 rounded-lg border border-orange-500/30 shadow-[0_0_10px_rgba(249,115,22,0.1)] transition-colors duration-300">
+           <i data-lucide="flame" class="w-4 h-4 text-orange-500 fill-orange-500" id="comboIcon"></i>
+           <span class="font-black text-white text-base md:text-xl font-mono">x<span id="comboText">0</span></span>
+        </div>
 
         <div id="timerContainer" class="flex items-center space-x-2 px-3 py-1.5 rounded-lg font-black border border-slate-600 text-slate-300 bg-slate-800 transition-colors">
           <i data-lucide="clock" class="w-4 h-4"></i>
@@ -216,27 +233,30 @@
     </div>
 
     <div class="w-full bg-slate-900 h-2 relative overflow-hidden">
-      <div id="progressBar" class="bg-gradient-to-r from-amber-600 to-amber-400 h-full transition-all duration-500 shadow-[0_0_10px_#fbbf24]" style="width: 0%"></div>
+      <div id="progressBar" class="bg-gradient-to-r from-cyan-600 to-cyan-400 h-full transition-all duration-500 shadow-[0_0_10px_#22d3ee]" style="width: 0%"></div>
     </div>
 
     <div class="flex-1 w-full mx-auto p-4 md:p-6 flex flex-col max-w-4xl relative z-10 mt-2">
       
-      <div class="bg-blue-900/20 border border-blue-500/30 rounded-xl p-3 mb-4 flex items-center justify-center space-x-2 text-blue-400 text-xs md:text-sm font-bold">
-        <i data-lucide="waves" class="w-4 h-4 animate-pulse"></i>
-        <span>NƯỚC ĐANG DÂNG! Trả lời sai sẽ bị sạt lở mất 1 Sơn Thạch. Mất 5 khối là tử trận!</span>
+      <div class="bg-cyan-900/20 border border-cyan-500/30 rounded-xl p-3 mb-4 flex items-center justify-center space-x-2 text-cyan-400 text-xs md:text-sm font-bold">
+        <i data-lucide="info" class="w-4 h-4"></i>
+        <span>Ghi chú: Trả lời đúng để tích lũy COMBO, sai sẽ đứt chuỗi và Combo về 0!</span>
       </div>
 
       <div id="quizBox" class="bg-slate-900/90 backdrop-blur rounded-2xl shadow-xl border border-slate-700 p-6 md:p-8 flex flex-col mb-6 transition-all duration-300 relative overflow-hidden">
-        <div class="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
-          <i data-lucide="mountain" class="w-32 h-32 text-amber-500"></i>
+        <div class="absolute top-0 right-0 p-4 opacity-5 pointer-events-none">
+          <i data-lucide="layers" class="w-32 h-32"></i>
         </div>
         
         <div class="flex justify-between items-center mb-6 border-b border-slate-800 pb-4">
           <div class="flex items-center space-x-3">
             <div class="bg-slate-800 p-2 rounded-lg border border-slate-700">
-              <i data-lucide="swords" class="w-6 h-6 text-emerald-400"></i>
+              <i data-lucide="blocks" class="w-6 h-6 text-cyan-400"></i>
             </div>
-            <span id="questionCounter" class="text-sm font-black text-emerald-400 uppercase tracking-widest">Đợt tấn công 1 / 10</span>
+            <span id="questionCounter" class="text-sm font-black text-cyan-400 uppercase tracking-widest">Tầng 1 / 10</span>
+          </div>
+          <div class="text-xs font-bold text-slate-500 border border-slate-700 bg-slate-950 px-2 py-1 rounded">
+            Thưởng gốc: +100 <i data-lucide="star" class="w-3 h-3 inline text-yellow-500"></i>
           </div>
         </div>
         
@@ -254,28 +274,31 @@
   </div>
 
   <div id="result-view" class="min-h-screen bg-slate-950 flex items-center justify-center p-4 hidden relative overflow-hidden bg-grid">
-    <div id="resultGlow" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full blur-[100px] pointer-events-none transition-colors duration-1000"></div>
+    <div id="resultGlow" class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-yellow-500/10 rounded-full blur-[100px] pointer-events-none transition-colors duration-1000"></div>
 
     <div class="bg-slate-900/90 backdrop-blur-xl p-8 md:p-12 rounded-3xl shadow-2xl border border-slate-700 max-w-lg w-full text-center relative z-10">
       
-      <div id="resIconContainer" class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 bg-slate-800 border-4 transition-all duration-500 shadow-lg">
-        <i data-lucide="shield-check" id="resIcon" class="w-12 h-12"></i>
+      <div id="resIconContainer" class="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 bg-slate-800 border-4 border-yellow-400 shadow-[0_0_40px_rgba(250,204,21,0.4)]">
+        <i data-lucide="gem" class="w-12 h-12 text-yellow-400"></i>
       </div>
 
-      <h2 id="resMainTitle" class="text-3xl font-black mb-2 uppercase tracking-widest drop-shadow-md"></h2>
-      <p class="text-slate-400 font-medium mb-8">Tướng Lĩnh: <span id="resStudentName" class="text-emerald-400 font-black uppercase tracking-wider"></span></p>
+      <h2 id="resMainTitle" class="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-yellow-300 via-yellow-500 to-orange-500 mb-2 uppercase tracking-widest drop-shadow-[0_2px_5px_rgba(0,0,0,0.8)]">Chinh Phục Thành Công!</h2>
+      <p class="text-slate-400 font-medium mb-8">Kỹ Sư: <span id="resStudentName" class="text-cyan-400 font-black uppercase tracking-wider"></span></p>
 
-      <p id="resMessage" class="text-sm font-bold mb-6 uppercase tracking-widest"></p>
+      <div class="mb-8">
+        <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-1">Tổng Điểm Tri Thức</p>
+        <div class="text-6xl font-black text-yellow-400 drop-shadow-[0_0_15px_rgba(250,204,21,0.5)] font-mono" id="resTotalScore">0</div>
+      </div>
 
-      <div id="rankContainer" class="hidden bg-slate-950/80 border border-amber-500/30 rounded-2xl p-6 flex-col items-center justify-center mb-8 shadow-inner relative">
+      <div id="rankContainer" class="hidden bg-slate-950/80 border border-yellow-500/30 rounded-2xl p-6 flex-col items-center justify-center mb-8 shadow-inner relative">
         <div class="flex items-center space-x-4">
-          <div class="p-3 rounded-xl bg-slate-800 border border-amber-500/50">
-            <i data-lucide="medal" class="w-8 h-8 text-amber-500"></i>
+          <div class="p-3 rounded-xl bg-slate-800 border border-yellow-500/50">
+            <i data-lucide="trophy" class="w-8 h-8 text-yellow-400"></i>
           </div>
           <div class="text-left">
-            <p class="font-bold text-xs text-amber-500/70 uppercase tracking-widest">Xếp Hạng Sinh Tồn</p>
+            <p class="font-bold text-xs text-yellow-500/70 uppercase tracking-widest">Xếp Hạng Đỉnh Cao</p>
             <p class="text-3xl font-black text-white leading-none mt-1">
-              #<span id="rankNum" class="text-amber-400 drop-shadow-md"></span> <span id="rankTotal" class="text-lg font-medium text-slate-500"></span>
+              #<span id="rankNum" class="text-yellow-400 drop-shadow-md"></span> <span id="rankTotal" class="text-lg font-medium text-slate-500"></span>
             </p>
           </div>
         </div>
@@ -283,17 +306,17 @@
 
       <div class="grid grid-cols-2 gap-4 mb-8">
         <div class="bg-slate-950/80 rounded-2xl p-4 border border-slate-800 flex flex-col justify-center">
-          <div class="text-slate-500 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-2 flex items-center justify-center"><i data-lucide="shield" class="w-3 h-3 mr-1 text-amber-500"></i> Sơn Thạch Còn</div>
-          <div id="resHearts" class="flex items-center justify-center space-x-1"></div>
+          <div class="text-slate-500 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-2 flex items-center justify-center"><i data-lucide="flame" class="w-3 h-3 mr-1 text-orange-500"></i> Combo Kỷ Lục</div>
+          <div class="text-3xl font-black text-white font-mono">x<span id="resMaxStreak" class="text-orange-500">0</span></div>
         </div>
         <div class="bg-slate-950/80 rounded-2xl p-4 border border-slate-800 flex flex-col justify-center">
-          <div class="text-slate-500 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-2 flex items-center justify-center"><i data-lucide="mountain" class="w-3 h-3 mr-1 text-emerald-500"></i> Đợt Lũ Đã Chặn</div>
+          <div class="text-slate-500 text-[10px] md:text-xs font-bold uppercase tracking-widest mb-2 flex items-center justify-center"><i data-lucide="check-circle" class="w-3 h-3 mr-1 text-emerald-500"></i> Số Câu Đúng</div>
           <div class="text-3xl font-black text-white"><span id="resScore" class="text-emerald-400 font-mono">0</span><span class="text-lg text-slate-600 font-mono">/<span id="resTotal">0</span></span></div>
         </div>
       </div>
 
-      <button onclick="goHome()" class="w-full bg-amber-600 hover:bg-amber-500 text-white py-4 rounded-xl font-black uppercase tracking-widest shadow-[0_0_20px_rgba(217,119,6,0.4)] transition">
-        Rời Khỏi Trận Địa
+      <button onclick="goHome()" class="w-full bg-cyan-600 hover:bg-cyan-500 text-white py-4 rounded-xl font-black uppercase tracking-widest shadow-[0_0_20px_rgba(8,145,178,0.4)] transition">
+        Xây Tháp Mới
       </button>
     </div>
   </div>
@@ -303,11 +326,11 @@
       <div class="flex flex-col md:flex-row justify-between items-center mb-8 bg-slate-900 p-6 rounded-2xl border border-slate-800 shadow-xl">
         <div class="flex items-center space-x-4 mb-4 md:mb-0">
           <div class="bg-slate-800 p-3 rounded-xl border border-slate-700">
-            <i data-lucide="scroll" class="w-8 h-8 text-amber-400"></i>
+            <i data-lucide="compass" class="w-8 h-8 text-cyan-400"></i>
           </div>
           <div>
-            <h1 class="text-2xl font-black text-white tracking-widest uppercase">Phủ Lạc Hầu</h1>
-            <p class="text-slate-500 text-sm font-bold tracking-wider">Quản lý binh pháp và tiến độ trị thủy</p>
+            <h1 class="text-2xl font-black text-white tracking-widest uppercase">Phòng Kiến Trúc Sư</h1>
+            <p class="text-slate-500 text-sm font-bold tracking-wider">Tạo bản vẽ và theo dõi tiến độ xây tháp</p>
           </div>
         </div>
         <button onclick="goHome()" class="flex items-center space-x-2 text-slate-300 hover:text-white bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-lg font-bold transition border border-slate-700">
@@ -320,40 +343,40 @@
         
         <div class="lg:col-span-2">
           <div class="bg-slate-900 rounded-2xl shadow-xl border border-slate-800 p-6 h-full flex flex-col">
-            <h2 class="text-lg font-black text-amber-400 flex items-center mb-4 uppercase tracking-widest">
-              <i data-lucide="bot" class="w-5 h-5 mr-2"></i> Trợ Lý AI: Lập Binh Pháp
+            <h2 class="text-lg font-black text-cyan-400 flex items-center mb-4 uppercase tracking-widest">
+              <i data-lucide="bot" class="w-5 h-5 mr-2"></i> Trợ Lý AI: Tạo Vật Liệu Xây Dựng
             </h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
               <div>
-                <label class="block text-xs font-bold text-slate-400 mb-1">Chiến thuật (Chủ đề)</label>
-                <input type="text" id="pTopic" placeholder="VD: Khảo sát hàm số..." class="w-full px-3 py-2 bg-slate-950 text-white rounded-lg border border-slate-700 focus:ring-2 focus:ring-amber-500 text-sm outline-none" />
+                <label class="block text-xs font-bold text-slate-400 mb-1">Mục tiêu (Chủ đề)</label>
+                <input type="text" id="pTopic" placeholder="VD: Khảo sát hàm số..." class="w-full px-3 py-2 bg-slate-950 text-white rounded-lg border border-slate-700 focus:ring-2 focus:ring-cyan-500 text-sm outline-none" />
               </div>
               <div>
-                <label class="block text-xs font-bold text-slate-400 mb-1">Sức mạnh Thủy Tinh</label>
-                <select id="pDiff" class="w-full px-3 py-2 bg-slate-950 text-white rounded-lg border border-slate-700 focus:ring-2 focus:ring-amber-500 text-sm outline-none">
-                  <option>Mưa nhỏ (Dễ)</option><option selected>Lũ lớn (Trung bình)</option><option>Đại hồng thủy (Khó)</option>
+                <label class="block text-xs font-bold text-slate-400 mb-1">Mức độ phức tạp</label>
+                <select id="pDiff" class="w-full px-3 py-2 bg-slate-950 text-white rounded-lg border border-slate-700 focus:ring-2 focus:ring-cyan-500 text-sm outline-none">
+                  <option>Cơ bản (Nền móng)</option><option selected>Trung bình (Thân tháp)</option><option>Khó (Đỉnh tháp)</option>
                 </select>
               </div>
-              <input type="hidden" id="pRole" value="Lạc Hầu phụ trách quân sự và toán pháp" />
-              <input type="hidden" id="pGrade" value="Các tướng lĩnh trẻ" />
+              <input type="hidden" id="pRole" value="Kiến trúc sư trưởng môn Toán" />
+              <input type="hidden" id="pGrade" value="Kỹ sư học việc" />
               <div class="grid grid-cols-2 gap-2 md:col-span-2">
                 <div>
-                  <label class="block text-xs font-bold text-slate-400 mb-1">Đợt tấn công (Câu)</label>
-                  <input type="number" id="pCount" value="10" class="w-full px-3 py-2 bg-slate-950 text-white rounded-lg border border-slate-700 focus:ring-2 focus:ring-amber-500 text-sm outline-none" />
+                  <label class="block text-xs font-bold text-slate-400 mb-1">Số tầng tháp (Câu)</label>
+                  <input type="number" id="pCount" value="10" class="w-full px-3 py-2 bg-slate-950 text-white rounded-lg border border-slate-700 focus:ring-2 focus:ring-cyan-500 text-sm outline-none" />
                 </div>
                 <div>
-                  <label class="block text-xs font-bold text-slate-400 mb-1">Ghi chú chiến thuật</label>
-                  <input type="text" id="pNotes" placeholder="VD: Đề có đồ thị..." class="w-full px-3 py-2 bg-slate-950 text-white rounded-lg border border-slate-700 focus:ring-2 focus:ring-amber-500 text-sm outline-none" />
+                  <label class="block text-xs font-bold text-slate-400 mb-1">Ghi chú thiết kế</label>
+                  <input type="text" id="pNotes" placeholder="VD: Đề có hình học..." class="w-full px-3 py-2 bg-slate-950 text-white rounded-lg border border-slate-700 focus:ring-2 focus:ring-cyan-500 text-sm outline-none" />
                 </div>
               </div>
             </div>
             
-            <button id="btnGeneratePrompt" class="w-full bg-amber-500/10 hover:bg-amber-500/20 text-amber-500 font-bold py-2.5 rounded-xl transition flex items-center justify-center text-sm mb-4 border border-amber-500/30">
-              Sinh Binh Pháp (Prompt)
+            <button id="btnGeneratePrompt" class="w-full bg-cyan-500/10 hover:bg-cyan-500/20 text-cyan-400 font-bold py-2.5 rounded-xl transition flex items-center justify-center text-sm mb-4 border border-cyan-500/30">
+              Sinh Bản Vẽ (Prompt)
             </button>
 
             <div id="promptOutputContainer" class="relative mt-auto hidden">
-              <textarea id="promptOutput" readonly class="w-full h-32 p-3 text-xs text-emerald-400 font-mono bg-slate-950 border border-slate-700 rounded-xl resize-none focus:outline-none"></textarea>
+              <textarea id="promptOutput" readonly class="w-full h-32 p-3 text-xs text-amber-400 font-mono bg-slate-950 border border-slate-700 rounded-xl resize-none focus:outline-none"></textarea>
               <button id="btnCopyPrompt" class="absolute bottom-3 right-3 bg-slate-800 border border-slate-600 hover:bg-slate-700 p-2 rounded-lg flex items-center text-xs font-bold transition text-white">
                 <i data-lucide="copy" id="promptCopyIcon" class="w-4 h-4 mr-1"></i>
                 <span id="promptCopyText">Copy</span>
@@ -365,15 +388,15 @@
         <div class="lg:col-span-1">
           <div class="bg-slate-900 rounded-2xl shadow-xl border border-slate-800 p-6 h-full">
             <h2 class="text-lg font-black text-white flex items-center mb-4 uppercase tracking-widest">
-              <i data-lucide="swords" class="w-5 h-5 mr-2 text-emerald-500"></i> Xuất Mã Chiến Trận
+              <i data-lucide="hard-hat" class="w-5 h-5 mr-2 text-yellow-500"></i> Xuất Mã Công Trình
             </h2>
 
             <div class="space-y-4">
               <div>
-                <label class="block text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">1. Nguồn Binh Pháp (Sheets)</label>
+                <label class="block text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">1. Nguồn Dữ Liệu (Sheets)</label>
                 <div class="relative">
                   <i data-lucide="link" class="absolute left-3 top-2.5 w-4 h-4 text-slate-500"></i>
-                  <input type="text" id="tSheetLink" placeholder="Dán link Sheets..." class="w-full pl-9 pr-3 py-2 bg-slate-950 text-white rounded-lg border border-slate-700 focus:ring-2 focus:ring-emerald-500 outline-none text-sm font-mono" />
+                  <input type="text" id="tSheetLink" placeholder="Dán link Sheets..." class="w-full pl-9 pr-3 py-2 bg-slate-950 text-white rounded-lg border border-slate-700 focus:ring-2 focus:ring-yellow-500 outline-none text-sm font-mono" />
                 </div>
               </div>
 
@@ -381,25 +404,25 @@
                 <label class="block text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">2. Rút ngẫu nhiên (Tổ hợp)</label>
                 <div class="relative">
                   <i data-lucide="dices" class="absolute left-3 top-2.5 w-4 h-4 text-slate-500"></i>
-                  <input type="number" id="tRandomCount" placeholder="Để trống lấy toàn bộ" class="w-full pl-9 pr-3 py-2 bg-slate-950 text-white rounded-lg border border-slate-700 focus:ring-2 focus:ring-emerald-500 outline-none text-sm" />
+                  <input type="number" id="tRandomCount" placeholder="Để trống lấy toàn bộ" class="w-full pl-9 pr-3 py-2 bg-slate-950 text-white rounded-lg border border-slate-700 focus:ring-2 focus:ring-yellow-500 outline-none text-sm" />
                 </div>
               </div>
 
               <div>
-                <label class="block text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">3. Thời gian chống lũ (Phút)</label>
+                <label class="block text-xs font-bold text-slate-400 mb-1 uppercase tracking-wider">3. Thời gian thi công (Phút)</label>
                 <div class="relative">
                   <i data-lucide="clock" class="absolute left-3 top-2.5 w-4 h-4 text-slate-500"></i>
-                  <input type="number" id="tTimeLimit" value="20" min="1" class="w-full pl-9 pr-3 py-2 bg-slate-950 text-white rounded-lg border border-slate-700 focus:ring-2 focus:ring-emerald-500 outline-none text-sm" />
+                  <input type="number" id="tTimeLimit" value="20" min="1" class="w-full pl-9 pr-3 py-2 bg-slate-950 text-white rounded-lg border border-slate-700 focus:ring-2 focus:ring-yellow-500 outline-none text-sm" />
                 </div>
               </div>
 
-              <button id="btnGenerateCode" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-black py-3 rounded-xl transition flex items-center justify-center mt-2 uppercase tracking-widest shadow-[0_0_15px_rgba(16,185,129,0.4)]">
-                Khai Mở Chiến Trận
+              <button id="btnGenerateCode" class="w-full bg-yellow-600 hover:bg-yellow-500 text-black font-black py-3 rounded-xl transition flex items-center justify-center mt-2 uppercase tracking-widest shadow-[0_0_15px_rgba(202,138,4,0.4)]">
+                Khai Mở Công Trình
               </button>
             </div>
 
-            <div id="codeResultContainer" class="hidden mt-6 bg-slate-950 border border-emerald-500 rounded-xl p-4 text-center animate-fadeIn relative overflow-hidden">
-              <p class="text-xs font-black text-emerald-500 mb-2 uppercase tracking-widest">Mã Lệnh Thống Soái</p>
+            <div id="codeResultContainer" class="hidden mt-6 bg-slate-950 border border-yellow-500 rounded-xl p-4 text-center animate-fadeIn relative overflow-hidden">
+              <p class="text-xs font-black text-yellow-500 mb-2 uppercase tracking-widest">Mã Truy Cập Kỹ Sư</p>
               <p id="generatedCodeText" class="text-3xl font-black text-white tracking-[0.2em] font-mono"></p>
               <button id="btnCopyJoinLink" class="mt-4 w-full flex items-center justify-center py-2 rounded-lg text-xs font-bold transition bg-slate-800 hover:bg-slate-700 text-white border border-slate-700">
                 <i data-lucide="share-2" id="linkCopyIcon" class="w-3 h-3 mr-1.5"></i>
@@ -413,12 +436,12 @@
           <div class="bg-slate-900 rounded-2xl shadow-xl border border-slate-800 overflow-hidden">
             <div class="p-4 bg-slate-950 border-b border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
               <h3 class="text-white font-black uppercase tracking-widest flex items-center text-sm">
-                <i data-lucide="bar-chart-2" class="w-4 h-4 mr-2 text-amber-500"></i> Bảng Vàng Trị Thủy
+                <i data-lucide="bar-chart-2" class="w-4 h-4 mr-2 text-cyan-400"></i> Bảng Vàng Chinh Phục
               </h3>
               <div class="flex items-center space-x-2">
                 <i data-lucide="filter" class="w-4 h-4 text-slate-500"></i>
-                <select id="filterExamCode" class="bg-slate-900 text-amber-500 font-mono text-xs px-3 py-1.5 rounded-lg border border-slate-700 outline-none focus:ring-2 focus:ring-amber-500 cursor-pointer shadow-inner uppercase tracking-wider">
-                  <option value="ALL">TẤT CẢ CHIẾN TRẬN</option>
+                <select id="filterExamCode" class="bg-slate-900 text-cyan-400 font-mono text-xs px-3 py-1.5 rounded-lg border border-slate-700 outline-none focus:ring-2 focus:ring-cyan-500 cursor-pointer shadow-inner uppercase tracking-wider">
+                  <option value="ALL">TẤT CẢ CÔNG TRÌNH</option>
                 </select>
               </div>
             </div>
@@ -428,9 +451,9 @@
                 <thead>
                   <tr class="bg-slate-800/50 border-b border-slate-700">
                     <th class="p-4 font-bold text-slate-400 text-xs uppercase tracking-wider">Hạng</th>
-                    <th class="p-4 font-bold text-slate-400 text-xs uppercase tracking-wider">Vị Tướng / Thời Điểm</th>
-                    <th class="p-4 font-bold text-slate-400 text-xs uppercase tracking-wider text-center">Binh Pháp</th>
-                    <th class="p-4 font-bold text-slate-400 text-xs uppercase tracking-wider text-center">Nước Đã Chặn</th>
+                    <th class="p-4 font-bold text-slate-400 text-xs uppercase tracking-wider">Kỹ Sư / Thời Điểm</th>
+                    <th class="p-4 font-bold text-slate-400 text-xs uppercase tracking-wider text-center">Bản Vẽ</th>
+                    <th class="p-4 font-bold text-slate-400 text-xs uppercase tracking-wider text-center">Điểm (Max Combo)</th>
                     <th class="p-4 font-bold text-slate-400 text-xs uppercase tracking-wider text-center">Tốc Độ</th>
                   </tr>
                 </thead>
@@ -475,13 +498,13 @@
     
     const defaultQuizData = [
       {
-        question: "Đợt lũ 1: Đạo hàm của $x^2$ là gì?",
+        question: "Tầng 1: Đạo hàm của $x^2$ là gì?",
         image: null,
         options: ["$2x$", "$x$", "$2$", "$x^3/3$"],
         correctIndex: 0
       },
       {
-        question: "Đợt lũ 2: Căn bậc hai của $16$ bằng bao nhiêu?",
+        question: "Tầng 2: Căn bậc hai của $16$ bằng bao nhiêu?",
         image: null,
         options: ["$4$", "$-4$", "$\\pm 4$", "$8$"],
         correctIndex: 0
@@ -504,9 +527,11 @@
     let isMusicPlaying = true;
     let isProcessing = false; 
     
-    // Survival State (Thạch Sơn)
-    const MAX_HEARTS = 5;
-    let hearts = MAX_HEARTS;
+    // Combo & Score State
+    let currentStreak = 0;
+    let maxStreak = 0;
+    let totalScore = 0;
+    const BASE_POINTS = 100;
 
     // Teacher State
     let leaderboardData = [];
@@ -521,7 +546,7 @@
     function formatMathText(text) {
       if (!text) return '';
       return String(text).split('$').map((part, index) => {
-        if (index % 2 === 1) return `<span class="bg-slate-800 text-amber-400 px-1.5 py-0.5 rounded font-mono font-bold mx-1 inline-block tracking-wide border border-slate-700 shadow-inner">\\(${part}\\)</span>`;
+        if (index % 2 === 1) return `<span class="bg-slate-800 text-cyan-400 px-1.5 py-0.5 rounded font-mono font-bold mx-1 inline-block tracking-wide border border-slate-700 shadow-inner">\\(${part}\\)</span>`;
         return part;
       }).join('');
     }
@@ -579,30 +604,32 @@
       return array;
     }
 
-    // Render Sơn Thạch (Máu)
-    function renderHearts(containerId = 'heartsContainer', currentHearts = hearts) {
-      const container = $(containerId);
-      if(!container) return;
-      let html = '';
-      for(let i = 0; i < MAX_HEARTS; i++) {
-        if(i < currentHearts) {
-          html += `<i data-lucide="shield" class="w-5 h-5 md:w-6 md:h-6 text-amber-500 fill-amber-500 drop-shadow-[0_0_5px_rgba(245,158,11,0.8)] animate-heartbeat" style="animation-delay: ${i*0.2}s"></i>`;
-        } else {
-          html += `<i data-lucide="shield-off" class="w-5 h-5 md:w-6 md:h-6 text-blue-500/50"></i>`;
-        }
-      }
-      container.innerHTML = html;
-      lucide.createIcons();
+    // Hiển thị Popup Combo
+    function showComboPop(streak) {
+      if (streak < 2) return;
+      const pContainer = $('comboPopupContainer');
+      const pText = $('comboPopupText');
+      pText.textContent = `COMBO x${streak}!`;
+      show(pContainer);
+      pText.classList.remove('animate-combo-pop');
+      void pText.offsetWidth;
+      pText.classList.add('animate-combo-pop');
+      
+      const ui = $('comboHeaderUI');
+      ui.classList.add('bg-orange-500/30', 'scale-110');
+      setTimeout(()=> ui.classList.remove('bg-orange-500/30', 'scale-110'), 300);
+
+      setTimeout(() => hide(pContainer), 1200);
     }
 
-    // Hiển thị Popup Nước Dâng (Phạt)
-    function showPenaltyEffect() {
-      const pContainer = $('penaltyContainer');
-      const pText = $('penaltyText');
+    // Hiển thị Popup Sạt lở / Đứt Combo
+    function showComboBreak() {
+      const pContainer = $('comboBreakContainer');
+      const pText = $('comboBreakText');
       show(pContainer);
-      pText.classList.remove('animate-damage');
+      pText.classList.remove('animate-combo-break');
       void pText.offsetWidth; 
-      pText.classList.add('animate-damage');
+      pText.classList.add('animate-combo-break');
       
       const quizBox = $('quizBox');
       quizBox.classList.add('animate-shake');
@@ -611,6 +638,16 @@
         hide(pContainer);
         quizBox.classList.remove('animate-shake');
       }, 800);
+    }
+
+    function updateScoreUI() {
+      $('scoreText').textContent = totalScore;
+      $('comboText').textContent = currentStreak;
+      
+      const icon = $('comboIcon');
+      if (currentStreak >= 5) icon.className = "w-4 h-4 text-red-500 fill-red-500 animate-pulse";
+      else if (currentStreak >= 2) icon.className = "w-4 h-4 text-orange-500 fill-orange-500";
+      else icon.className = "w-4 h-4 text-slate-500";
     }
 
     // 4. FIREBASE AUTH
@@ -631,7 +668,7 @@
 
     // 5. EVENT LISTENERS - LOGIN
     $('tabStudentBtn').onclick = () => {
-      $('tabStudentBtn').className = "flex-1 py-2 rounded-lg text-sm font-black transition-all bg-slate-800 text-amber-500 shadow-sm uppercase tracking-wider";
+      $('tabStudentBtn').className = "flex-1 py-2 rounded-lg text-sm font-black transition-all bg-slate-800 text-cyan-400 shadow-sm uppercase tracking-wider";
       $('tabTeacherBtn').className = "flex-1 py-2 rounded-lg text-sm font-black transition-all text-slate-500 hover:text-slate-300 uppercase tracking-wider";
       show($('studentForm')); hide($('teacherForm'));
     };
@@ -660,9 +697,9 @@
       studentNameStr = $('studentNameInput').value.trim();
       examCodeStr = $('examCodeInput').value.trim().toUpperCase();
       
-      if(!studentNameStr) return alert("Vui lòng nhập tên vị tướng!");
+      if(!studentNameStr) return alert("Vui lòng nhập tên kỹ sư!");
       
-      showLoading("Đang truyền linh khí dâng núi...");
+      showLoading("Đang xây dựng nền móng...");
       hide($('loginErrorMsg'));
       activeQuizData = [...defaultQuizData];
       activeConfig = null;
@@ -724,20 +761,20 @@
               });
             } else { throw new Error('LỖI DỮ LIỆU: Google Sheets bị trống hoặc không đúng định dạng 7 cột.'); }
           } else { 
-            throw new Error(`LỖI MÃ: Mã chiến trận "${examCodeStr}" không tồn tại!\n(Lưu ý: Mã tạo ở Vercel sẽ không dùng được trên trang Preview này và ngược lại do khác Database).`); 
+            throw new Error(`LỖI MÃ: Mã công trình "${examCodeStr}" không tồn tại!\n(Lưu ý: Mã tạo ở Vercel sẽ không dùng được trên trang Preview này và ngược lại do khác Database).`); 
           }
         } catch (err) {
           console.error("DEBUG ERROR:", err);
           hideLoading();
           
-          let errorMsg = err.message || "Lỗi tải dữ liệu chiến trận.";
+          let errorMsg = err.message || "Lỗi tải dữ liệu công trình.";
           if (errorMsg.includes('Missing or insufficient permissions')) {
               errorMsg = "LỖI FIREBASE: Chưa cấp quyền Firestore Database. Hãy vào Rules đổi thành 'allow read, write: if true;'";
           }
           
           $('loginErrorMsg').innerHTML = errorMsg.replace('\n', '<br/>');
           show($('loginErrorMsg'));
-          alert(errorMsg.replace('<br/>', '\n')); // Cảnh báo thẳng ra màn hình
+          alert(errorMsg.replace('<br/>', '\n'));
           return;
         }
       } else {
@@ -762,7 +799,12 @@
       answersArr = new Array(activeQuizData.length).fill(null);
       currentQuestionIdx = 0;
       timeLeftSec = examTimeMinutes * 60; 
-      hearts = MAX_HEARTS;
+      
+      // Reset điểm và combo
+      currentStreak = 0;
+      maxStreak = 0;
+      totalScore = 0;
+      updateScoreUI();
       isProcessing = false;
       
       $('headerStudentName').textContent = studentNameStr;
@@ -770,14 +812,13 @@
       
       hideLoading();
       switchView('quiz');
-      renderHearts();
       startTimer();
       renderQuestion();
       
       if(isMusicPlaying) $('bgMusic').play().catch(()=>{});
     };
 
-    // 6. QUIZ LOGIC (SURVIVAL MODE)
+    // 6. QUIZ LOGIC
     function startTimer() {
       if(timerInterval) clearInterval(timerInterval);
       timerInterval = setInterval(() => {
@@ -785,7 +826,7 @@
         renderTimer();
         if(timeLeftSec <= 0) {
           clearInterval(timerInterval);
-          submitExam(false); // Hết giờ -> Tử trận
+          submitExam(); // Hết giờ nộp bài
         }
       }, 1000);
     }
@@ -795,9 +836,8 @@
       const s = (Math.max(0, timeLeftSec) % 60).toString().padStart(2, '0');
       $('timerText').textContent = `${m}:${s}`;
       const tc = $('timerContainer');
-      // Nếu dưới 1 phút (60s), chớp đỏ
       if (timeLeftSec < 60) {
-        tc.className = "flex items-center space-x-2 px-3 py-1.5 rounded-lg font-black border-2 border-red-500 text-red-500 bg-red-950/30 animate-pulse";
+        tc.className = "flex items-center space-x-2 px-3 py-1.5 rounded-lg font-black border border-red-500 text-white bg-red-600/80 animate-pulse";
       } else {
         tc.className = "flex items-center space-x-2 px-3 py-1.5 rounded-lg font-black border border-slate-600 text-slate-300 bg-slate-800";
       }
@@ -811,7 +851,7 @@
       lucide.createIcons();
     };
 
-    // LOGIC CHỌN ĐÁP ÁN: 5 MẠNG SURVIVAL
+    // LOGIC CHỌN ĐÁP ÁN: COMBO MODE
     window.selectAnswer = (idx) => {
       if(isProcessing) return;
       isProcessing = true;
@@ -820,31 +860,38 @@
       answersArr[currentQuestionIdx] = idx;
       
       const btn = $('optionsContainer').children[idx];
-      btn.classList.add('ring-2', 'ring-amber-500', 'bg-slate-700');
+      btn.classList.add('ring-2', 'ring-cyan-400', 'bg-slate-700');
 
       if (idx === q.correctIndex) {
-        // ĐÚNG - Flash ngọc lục bảo và qua câu
+        // ĐÚNG
+        currentStreak++;
+        if (currentStreak > maxStreak) maxStreak = currentStreak;
+        
+        totalScore += BASE_POINTS * currentStreak;
+        updateScoreUI();
+        
+        // Hiệu ứng flash cyan
         const overlay = document.createElement('div');
-        overlay.className = "fixed inset-0 bg-emerald-500/20 z-50 pointer-events-none transition-opacity duration-300";
+        overlay.className = "fixed inset-0 bg-cyan-500/20 z-50 pointer-events-none transition-opacity duration-300";
         document.body.appendChild(overlay);
         setTimeout(() => overlay.style.opacity = '0', 50);
+        
+        showComboPop(currentStreak);
+
         setTimeout(() => {
           overlay.remove();
           nextQuestion();
-        }, 350);
+        }, 600); 
       } else {
-        // SAI - Nước dâng trừ 1 khối Sơn Thạch
-        hearts--;
-        renderHearts();
-        showPenaltyEffect();
+        // SAI -> Đứt Combo
+        if (currentStreak >= 2) {
+            showComboBreak();
+        }
+        currentStreak = 0;
+        updateScoreUI();
         
         setTimeout(() => {
-          if (hearts <= 0) {
-            clearInterval(timerInterval);
-            submitExam(false); // Hết đá -> Lũ cuốn -> Game over
-          } else {
-            nextQuestion(); // Vẫn còn đá -> Đi tiếp
-          }
+          nextQuestion();
         }, 800); 
       }
     };
@@ -854,9 +901,8 @@
         currentQuestionIdx++;
         renderQuestion();
       } else {
-        // Đã qua hết câu hỏi mà vẫn còn sống -> Thắng
         clearInterval(timerInterval);
-        submitExam(true);
+        submitExam();
       }
       isProcessing = false;
     }
@@ -865,7 +911,7 @@
       const q = activeQuizData[currentQuestionIdx];
       
       $('progressBar').style.width = `${(currentQuestionIdx / activeQuizData.length) * 100}%`;
-      $('questionCounter').textContent = `Đợt tấn công thứ ${currentQuestionIdx + 1} / ${activeQuizData.length}`;
+      $('questionCounter').textContent = `Tầng tháp ${currentQuestionIdx + 1} / ${activeQuizData.length}`;
       
       $('questionText').innerHTML = formatMathText(q.question);
       if (q.image) {
@@ -877,7 +923,7 @@
 
       let optionsHTML = '';
       q.options.forEach((opt, idx) => {
-        const baseClass = `relative w-full text-left p-5 rounded-2xl transition-all duration-200 flex items-center min-h-[100px] text-slate-300 font-bold text-lg md:text-xl border bg-slate-800 border-slate-700 hover:bg-slate-700 hover:border-amber-500/50 hover:shadow-[0_0_15px_rgba(245,158,11,0.2)] cursor-pointer active:scale-95`;
+        const baseClass = `relative w-full text-left p-5 rounded-2xl transition-all duration-200 flex items-center min-h-[100px] text-slate-300 font-bold text-lg md:text-xl border bg-slate-800 border-slate-700 hover:bg-slate-700 hover:border-cyan-500/50 hover:shadow-[0_0_15px_rgba(6,182,212,0.2)] cursor-pointer active:scale-95`;
         optionsHTML += `
           <button onclick="selectAnswer(${idx})" class="${baseClass}">
             <div class="w-8 h-8 shrink-0 rounded-lg border border-slate-600 bg-slate-900 flex items-center justify-center mr-4 text-slate-400 text-sm font-black">
@@ -894,8 +940,8 @@
     }
 
     // 7. SUBMIT & RESULT
-    async function submitExam(isSurvived) {
-      showLoading("Đang ghi nhận kết quả trị thủy...");
+    async function submitExam() {
+      showLoading("Đang nghiệm thu công trình...");
       $('bgMusic').pause();
 
       let correctCount = 0;
@@ -912,23 +958,22 @@
         studentName: studentNameStr,
         examCode: usedCode,
         score: correctCount, 
+        totalScore: totalScore, 
+        maxStreak: maxStreak,
         total: activeQuizData.length,
         timeSpent: timeSpent,
         timestamp: new Date().toISOString(),
-        detailedResults,
-        isSurvived: isSurvived,
-        heartsRemaining: hearts
+        detailedResults
       };
 
-      // Đẩy dữ liệu sang Google Sheets (Chạy ngầm)
+      // Đẩy dữ liệu sang Google Sheets
       setTimeout(() => {
         try {
-          const url = `${DEFAULT_SCRIPT_URL}?studentName=${encodeURIComponent(studentNameStr)}&examCode=${encodeURIComponent(usedCode)}&score=${correctCount}&total=${activeQuizData.length}&timeSpent=${timeSpent}`;
+          const url = `${DEFAULT_SCRIPT_URL}?studentName=${encodeURIComponent(studentNameStr)}&examCode=${encodeURIComponent(usedCode)}&score=${totalScore}&total=${activeQuizData.length}&timeSpent=${timeSpent}`;
           fetch(url, { mode: 'no-cors' }).catch(e=>console.log(e));
         } catch (e) {}
       }, 10);
 
-      // Push to Firebase and calculate rank
       if (currentUser) {
         try {
           const colRef = collection(db, 'artifacts', appId, 'public', 'data', 'exam_results');
@@ -945,11 +990,16 @@
           if(!allData.find(d => d.id === docRef.id)) allData.push({id: docRef.id, ...resultObj});
           
           let filtered = allData.filter(r => (r.examCode || 'DEMO') === usedCode);
-          // Xếp hạng: Sống sót -> Điểm số -> Thời gian
+          // Xếp hạng: Tổng Điểm -> Max Combo -> Thời gian
           filtered.sort((a,b) => {
-            if (a.isSurvived && !b.isSurvived) return -1;
-            if (!a.isSurvived && b.isSurvived) return 1;
-            if (b.score !== a.score) return b.score - a.score; 
+            const scoreA = a.totalScore || a.score || 0;
+            const scoreB = b.totalScore || b.score || 0;
+            if (scoreB !== scoreA) return scoreB - scoreA;
+            
+            const streakA = a.maxStreak || 0;
+            const streakB = b.maxStreak || 0;
+            if (streakB !== streakA) return streakB - streakA;
+
             return a.timeSpent - b.timeSpent; 
           });
           
@@ -968,37 +1018,9 @@
       $('resStudentName').textContent = res.studentName;
       $('resScore').textContent = res.score;
       $('resTotal').textContent = res.total;
+      $('resTotalScore').textContent = res.totalScore;
+      $('resMaxStreak').textContent = res.maxStreak;
       
-      let heartsHtml = '';
-      for(let h=0; h<MAX_HEARTS; h++) {
-        if(h < (res.heartsRemaining || 0)) heartsHtml += `<i data-lucide="shield" class="w-6 h-6 text-amber-500 fill-amber-500"></i>`;
-        else heartsHtml += `<i data-lucide="shield-off" class="w-6 h-6 text-blue-500/50"></i>`;
-      }
-      $('resHearts').innerHTML = heartsHtml;
-      
-      const m = Math.floor(res.timeSpent / 60).toString().padStart(2, '0');
-      const s = (res.timeSpent % 60).toString().padStart(2, '0');
-
-      if (res.isSurvived) {
-        $('resMainTitle').textContent = "TRỊ THỦY THÀNH CÔNG!";
-        $('resMainTitle').className = "text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-emerald-300 via-emerald-500 to-teal-500 mb-2 uppercase tracking-widest drop-shadow-[0_2px_5px_rgba(0,0,0,0.8)]";
-        $('resIcon').setAttribute('data-lucide', 'mountain');
-        $('resIcon').className = "w-12 h-12 text-emerald-400";
-        $('resIconContainer').className = "w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 bg-slate-900 border-4 border-emerald-500 shadow-[0_0_40px_rgba(16,185,129,0.4)]";
-        $('resultGlow').className = "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-emerald-500/10 rounded-full blur-[100px] pointer-events-none";
-        $('resMessage').textContent = "Tuyệt vời! Ngọn núi đã chặn đứng hoàn toàn cơn thịnh nộ của Thủy Tinh.";
-        $('resMessage').className = "text-sm font-bold mb-8 text-emerald-400";
-      } else {
-        $('resMainTitle').textContent = "ĐÊ VỠ LŨ TRÀN!";
-        $('resMainTitle').className = "text-3xl font-black text-blue-500 mb-2 uppercase tracking-widest drop-shadow-[0_2px_5px_rgba(59,130,246,0.8)]";
-        $('resIcon').setAttribute('data-lucide', 'waves');
-        $('resIcon').className = "w-12 h-12 text-blue-500 animate-pulse";
-        $('resIconContainer').className = "w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-6 bg-slate-900 border-4 border-blue-600 shadow-[0_0_40px_rgba(59,130,246,0.4)]";
-        $('resultGlow').className = "absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-blue-600/10 rounded-full blur-[100px] pointer-events-none";
-        $('resMessage').textContent = "Sơn thạch đã vỡ nát. Dân làng chìm trong biển nước.";
-        $('resMessage').className = "text-sm font-bold mb-8 text-blue-400";
-      }
-
       if (rank > 0) {
         $('rankNum').textContent = rank;
         $('rankTotal').textContent = `/ ${totalRank}`;
@@ -1012,10 +1034,10 @@
 
     // 8. TEACHER DASHBOARD
     $('btnGeneratePrompt').onclick = () => {
-      const p = `Đóng vai là một ${$('pRole').value}. Hãy tạo một bộ binh pháp (ngân hàng đề) thử thách học sinh về chủ đề "${$('pTopic').value}" dành cho đối tượng ${$('pGrade').value}.
+      const p = `Đóng vai là một ${$('pRole').value}. Hãy tạo một bản vẽ (ngân hàng đề) thử thách học sinh về chủ đề "${$('pTopic').value}" dành cho đối tượng ${$('pGrade').value}.
 
 Yêu cầu cấu trúc:
-- Số lượng: ${$('pCount').value} câu hỏi.
+- Số lượng: ${$('pCount').value} câu hỏi (tầng tháp).
 - Mức độ: ${$('pDiff').value}.
 ${$('pNotes').value ? `- Ghi chú thêm: ${$('pNotes').value}\n` : ''}
 Yêu cầu định dạng xuất dữ liệu CHỈ MỘT BẢNG (table) 7 cột:
@@ -1029,12 +1051,12 @@ Chỉ in ra bảng, không giải thích.`;
     $('btnCopyPrompt').onclick = () => {
       $('promptOutput').select(); document.execCommand('copy');
       $('promptCopyIcon').setAttribute('data-lucide', 'check');
-      $('promptCopyIcon').classList.add('text-emerald-400');
+      $('promptCopyIcon').classList.add('text-cyan-400');
       $('promptCopyText').textContent = 'Đã copy!';
       lucide.createIcons();
       setTimeout(() => {
         $('promptCopyIcon').setAttribute('data-lucide', 'copy');
-        $('promptCopyIcon').classList.remove('text-emerald-400');
+        $('promptCopyIcon').classList.remove('text-cyan-400');
         $('promptCopyText').textContent = 'Copy';
         lucide.createIcons();
       }, 2000);
@@ -1065,7 +1087,7 @@ Chỉ in ra bảng, không giải thích.`;
         show($('codeResultContainer'));
         $('tSheetLink').value = '';
       } catch(e) { alert('Lỗi: ' + e.message); }
-      btn.innerHTML = 'Khai Mở Chiến Trận';
+      btn.innerHTML = 'Khai Mở Công Trình';
       btn.disabled = false;
     };
 
@@ -1096,9 +1118,12 @@ Chỉ in ra bảng, không giải thích.`;
       unsubscribeLeaderboard = onSnapshot(colRef, (snap) => {
         let results = snap.docs.map(d => ({id: d.id, ...d.data()}));
         results.sort((a,b) => {
-            if (a.isSurvived && !b.isSurvived) return -1;
-            if (!a.isSurvived && b.isSurvived) return 1;
-            if (b.score !== a.score) return b.score - a.score; 
+            const scoreA = a.totalScore || a.score || 0;
+            const scoreB = b.totalScore || b.score || 0;
+            if (scoreB !== scoreA) return scoreB - scoreA;
+            const streakA = a.maxStreak || 0;
+            const streakB = b.maxStreak || 0;
+            if (streakB !== streakA) return streakB - streakA;
             return a.timeSpent - b.timeSpent; 
         });
         leaderboardData = results;
@@ -1110,7 +1135,7 @@ Chỉ in ra bảng, không giải thích.`;
       const filterEl = $('filterExamCode');
       const uniqueCodes = [...new Set(leaderboardData.map(d => d.examCode || 'DEMO'))];
       
-      let optionsHTML = `<option value="ALL">TẤT CẢ CHIẾN TRẬN</option>`;
+      let optionsHTML = `<option value="ALL">TẤT CẢ CÔNG TRÌNH</option>`;
       uniqueCodes.forEach(code => { optionsHTML += `<option value="${code}">${code}</option>`; });
       
       if (filterEl.innerHTML.replace(/\s+/g, '') !== optionsHTML.replace(/\s+/g, '')) {
@@ -1127,33 +1152,26 @@ Chỉ in ra bảng, không giải thích.`;
 
       let html = '';
       if(displayData.length === 0) {
-        html = `<tr><td colspan="5" class="p-8 text-center text-slate-500 font-medium"><i data-lucide="radar" class="w-8 h-8 mx-auto mb-3 animate-pulse opacity-50"></i><p>Chưa có tướng lĩnh nào xuất trận...</p></td></tr>`;
+        html = `<tr><td colspan="5" class="p-8 text-center text-slate-500 font-medium"><i data-lucide="radar" class="w-8 h-8 mx-auto mb-3 animate-pulse opacity-50"></i><p>Chưa có kỹ sư nào nộp bản vẽ...</p></td></tr>`;
       } else {
         displayData.forEach((st, i) => {
           let rClass = "text-slate-500 bg-slate-800";
-          if(i===0 && st.isSurvived) rClass="bg-amber-500/20 text-amber-500 border border-amber-500/50 shadow-[0_0_10px_rgba(245,158,11,0.2)]";
-          else if(i===1 && st.isSurvived) rClass="bg-slate-300/20 text-slate-300 border border-slate-300/50";
-          else if(i===2 && st.isSurvived) rClass="bg-emerald-500/20 text-emerald-500 border border-emerald-500/50";
+          if(i===0) rClass="bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 shadow-[0_0_10px_rgba(250,204,21,0.2)]";
+          else if(i===1) rClass="bg-slate-300/20 text-slate-300 border border-slate-300/50";
+          else if(i===2) rClass="bg-orange-500/20 text-orange-400 border border-orange-500/50";
           
           const d = new Date(st.timestamp);
           const timeStr = `${Math.floor(st.timeSpent/60).toString().padStart(2,'0')}:${(st.timeSpent%60).toString().padStart(2,'0')}`;
           
-          const statusBadge = st.isSurvived 
-            ? `<span class="bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 text-[10px] px-2 py-0.5 rounded uppercase tracking-wider font-bold ml-2">Thành Công</span>`
-            : `<span class="bg-blue-500/20 text-blue-400 border border-blue-500/30 text-[10px] px-2 py-0.5 rounded uppercase tracking-wider font-bold ml-2">Lũ Cuốn</span>`;
-
-          let heartsHtml = '';
-          for(let h=0; h<MAX_HEARTS; h++) {
-            if(h < (st.heartsRemaining || 0)) heartsHtml += `<i data-lucide="shield" class="w-3 h-3 text-amber-500 fill-amber-500"></i>`;
-            else heartsHtml += `<i data-lucide="shield-off" class="w-3 h-3 text-slate-600"></i>`;
-          }
+          const tScore = st.totalScore || st.score || 0;
+          const mStreak = st.maxStreak || 0;
 
           html += `<tr class="hover:bg-slate-800/50 transition border-b border-slate-800/50">
             <td class="p-4"><span class="inline-flex items-center justify-center w-8 h-8 rounded font-black ${rClass}">${i+1}</span></td>
             <td class="p-4 font-bold text-white text-base tracking-wider">${st.studentName}<div class="text-[10px] text-slate-500 tracking-widest mt-1">${d.toLocaleTimeString('vi-VN')}</div></td>
             <td class="p-4 text-center"><span class="text-slate-400 font-mono text-xs border border-slate-700 px-2 py-1 rounded bg-slate-900">${st.examCode||'DEMO'}</span></td>
-            <td class="p-4 text-center"><div class="flex flex-col items-center justify-center gap-1"><div class="flex items-center font-black text-white"><span class="text-emerald-400 mr-1">${st.score}</span> / ${st.total} ${statusBadge}</div><div class="flex space-x-0.5 mt-1">${heartsHtml}</div></div></td>
-            <td class="p-4 text-center text-amber-400 font-mono">${timeStr}</td>
+            <td class="p-4 text-center"><div class="flex flex-col items-center justify-center gap-0.5"><div class="font-black text-yellow-400 text-lg">${tScore}</div><div class="flex items-center text-[10px] text-slate-500 font-bold uppercase"><i data-lucide="flame" class="w-3 h-3 text-orange-500 mr-1"></i> Max: x${mStreak}</div></div></td>
+            <td class="p-4 text-center text-cyan-400 font-mono">${timeStr}</td>
           </tr>`;
         });
       }
